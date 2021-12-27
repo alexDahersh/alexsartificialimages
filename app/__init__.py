@@ -5,7 +5,7 @@ def create_app():
     app.config['SECRET_KEY'] = 'Machine_Learning'
     app.secret_key = 'Machine_Learning'
 
-    from webApp.views import views
+    from app.views import views
 
     app.register_blueprint(views, url_prefix='/')
     return app

@@ -43,7 +43,7 @@ from torch.nn.functional import interpolate
 from torchvision.transforms import transforms
 from torch.utils.data import Dataset, DataLoader
 from torch.nn import Conv2d, BCEWithLogitsLoss, DataParallel, AvgPool2d, ModuleList, LeakyReLU, ConvTranspose2d, Embedding
-from webApp.models import _equalized_conv2d, _equalized_deconv2d, _equalized_linear, PixelwiseNorm, GenInitialBlock, GenGeneralConvBlock
+from app.models import _equalized_conv2d, _equalized_deconv2d, _equalized_linear, PixelwiseNorm, GenInitialBlock, GenGeneralConvBlock
 
 class Generator(nn.Module):
     def __init__(self, depth=5, latent_size=128, use_eql=True, use_spec_norm=False):

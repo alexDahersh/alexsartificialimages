@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for, session, current_app, Flask
-from webApp.models import _equalized_conv2d, _equalized_deconv2d, _equalized_linear, PixelwiseNorm, GenInitialBlock, GenGeneralConvBlock
-from webApp.generator import Generator
+from app.models import _equalized_conv2d, _equalized_deconv2d, _equalized_linear, PixelwiseNorm, GenInitialBlock, GenGeneralConvBlock
+from app.generator import Generator
 import json
 import os
 from sklearn.preprocessing import LabelEncoder
