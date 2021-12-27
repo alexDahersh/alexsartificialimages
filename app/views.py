@@ -59,7 +59,7 @@ views = Blueprint('views', __name__)
 def load_model_weights(model, filename, verbose=1):
     if verbose:
         print(f'-> Loading weights from {filename}')
-    model.load_state_dict(torch.load(filename))
+    model.load_state_dict(torch.load(filename), map_location=torch.device('cpu'))
     return model
 
 class MathGenerator():
