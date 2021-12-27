@@ -146,7 +146,7 @@ class DogGenerator():
             self.label_oh_encoder.weight.data = th.eye(self.num_classes)
         return self.label_oh_encoder(labels.view(-1))
 
-    def generate(self, depth=None, alpha=1, noise=None, race=None, n=64, n_plot=0):
+    def generate(self, depth=None, alpha=1, noise=None, race=None, n=1, n_plot=0):
         if depth is None:
             depth = self.depth - 1
         if noise is None:
