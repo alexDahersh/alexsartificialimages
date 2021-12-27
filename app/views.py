@@ -250,3 +250,7 @@ def marvel_charecters():
 
 
 
+app = Flask(__name__)
+app.config['SECRET_KEY'] = 'Machine_Learning'
+app.secret_key = 'Machine_Learning'
+app.register_blueprint(views, url_prefix='/')
