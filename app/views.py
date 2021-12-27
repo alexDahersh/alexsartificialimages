@@ -88,7 +88,7 @@ class MathGenerator():
             self.label_oh_encoder.weight.data = th.eye(self.num_classes)
         return self.label_oh_encoder(labels.view(-1))
 
-    def generate(self, depth=None, alpha=1, noise=None, race=None, n=64, n_plot=0):
+    def generate(self, depth=None, alpha=1, noise=None, race=None, n=1, n_plot=0):
         if depth is None:
             depth = self.depth - 1
         if noise is None:
@@ -186,9 +186,10 @@ def home():
 def dogs():
     if request.method == 'POST':
         ANNOTATION_PATH = os.path.join(current_app.root_path, 'Annotation')
+        print('Checkpoint 1')
         dog_gen = DogGenerator(ANNOTATION_PATH)
         species = request.form.get('species')
-
+        print('Checkpoint 2')
         if species in dog_gen.classes:
             generated_images = dog_gen.generate(depth=4, alpha=1, noise=None, race=species, n=64, n_plot=10)
             images = generated_images.clone().numpy().transpose(0, 2, 3, 1)      
