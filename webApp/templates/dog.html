@@ -1,0 +1,23 @@
+{% extends "base.html" %} {% block title %}Generate dogs{% endblock %} {% block
+    content %}
+    <form method="POST">
+      <h3 align="center">Generate dogs</h3>
+      <div class="form-group">
+        <label for="species">Species</label>
+        <input
+          type="text"
+          class="form-control"
+          id="species"
+          name="species"
+          placeholder="Enter species"
+        />
+      </div>
+      <br />
+      <button type="submit" class="btn btn-primary">Generate</button>
+    </form>
+    {% if urls%}
+    {% for url in urls %}
+        <img src= {{url}}>
+    {% endfor %}
+    {% endif %}
+    {% endblock %}
