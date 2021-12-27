@@ -147,6 +147,7 @@ class DogGenerator():
         return self.label_oh_encoder(labels.view(-1))
 
     def generate(self, depth=None, alpha=1, noise=None, race=None, n=1, n_plot=0):
+        print('Checkpoint 3')
         if depth is None:
             depth = self.depth - 1
         if noise is None:
@@ -156,20 +157,22 @@ class DogGenerator():
         races = None
         index = np.where(self.classes == race)[0][0]
         indexes = []
+        print('Checkpoint 4')
         for _ in range(n):
             indexes.append(index)
         indexes = np.array(indexes)
+        print('Checkpoint 5')
         if races is None:
             races = torch.from_numpy(indexes).long()
         
         label_information = self.one_hot_encode(races).cpu()
         gan_input = th.cat((label_information, noise), dim=-1)
-        
+        print('Checkpoint 6')
         if True:
             generated_images = self.gen_shadow(gan_input, depth, alpha).detach().cpu()
         else:
             generated_images = self.gen(gan_input, depth, alpha).detach().cpu()
-
+        print('Checkpoint 7')
 #         self.scale(generated_images)
         generated_images.add_(1).div_(2)
         return generated_images
