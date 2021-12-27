@@ -29,11 +29,6 @@ import datetime
 import operator
 import warnings
 import numpy as np
-import pandas as pd
-import seaborn as sns
-import tensorflow as tf
-import matplotlib.pyplot as plt
-import xml.etree.ElementTree as ET
 
 
 class _equalized_conv2d(th.nn.Module):
