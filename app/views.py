@@ -231,7 +231,7 @@ class DogGenerator():
 
 @views.route('/')
 def home():
-    return redirect(url_for('views.how_to_use'))
+    return redirect(url_for('views.about'))
 
 @views.route('/dogs', methods=['GET', 'POST'])
 def dogs():
@@ -317,8 +317,8 @@ def math_symbols():
 
     return render_template("math.html", urls = None, validsymbols = improvedclasses)
 
-@views.route('/marvel-charecters', methods=['GET', 'POST'])
-def marvel_charecters():
+@views.route('/marvel-inspired-superheroes', methods=['GET', 'POST'])
+def marvel_inspired_superheroes():
     if request.method == 'POST':
         print('Checkpoint 1')
         marvel_gen = MarvelGenerator()
@@ -367,6 +367,11 @@ def how_to_use():
         dogclasses.append(newclass)
     dogclasses.sort()
     return render_template("howtouse.html", validdogs = dogclasses, validsymbols = mathclasses)
+
+
+@views.route('/about')
+def about():
+    return render_template('about.html')
 
 
 app = Flask(__name__)
