@@ -253,7 +253,7 @@ def math_symbols():
         species = request.form.get('symbol')
 
         if species in math_gen.classes:
-            generated_images = math_gen.generate(depth=4, alpha=1, noise=None, race=species, n=128, n_plot=10)
+            generated_images = math_gen.generate(depth=4, alpha=1, noise=None, race=species, n=64, n_plot=10)
             images = generated_images.clone().numpy().transpose(0, 2, 3, 1)      
             urls = []
             scale_size = 1
