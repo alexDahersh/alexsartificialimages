@@ -16,9 +16,30 @@
       <button type="submit" class="btn btn-primary">Generate</button>
       <br />
     </form>
+    <br />
     {% if urls%}
     {% for url in urls %}
         <img src= {{url}}>
     {% endfor %}
     {% endif %}
+    <br />
+    <h1>Only click generate once, it takes time for the website to respond. If the website does not respond in a minute that means you did not click generate.</h1>
+    <br />
+    <b>
+      You can scroll down to see the valid species once you generate an image.
+    </b>
+    <br />
+    <br />
+    <br />
+    <h1>Valid Dog Species</h1>
+    <br />
+    <b>
+      *Tip: use control f on windows or control f on mac to search if a certain species is valid*
+    </b>
+    <br />
+    <ul>
+        {% for species in validspecies %}
+        <li>{{species}}</li>
+        {% endfor %}
+    </ul> 
     {% endblock %}

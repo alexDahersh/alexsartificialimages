@@ -108,7 +108,6 @@ class MathGenerator():
         for mathclass in self.classes:
             newclass = mathclass.lower()
             newclass = newclass.replace('_', '')
-            newclass = newclass.replace('-', '')
             newclass = newclass.replace(' ', '')
             self.classesbetternames.append(newclass)
         
@@ -232,12 +231,20 @@ class DogGenerator():
 
 @views.route('/')
 def home():
-    return redirect(url_for('views.dogs'))
+    return redirect(url_for('views.how_to_use'))
 
 @views.route('/dogs', methods=['GET', 'POST'])
 def dogs():
+    ANNOTATION_PATH = os.path.join(current_app.root_path, 'Annotation')
+    classes = [dirname[10:] for dirname in os.listdir(ANNOTATION_PATH)]
+    improvedclasses = []
+    for currentclass in classes:
+        newclass = currentclass.lower()
+        newclass = newclass.replace('_', ' ')
+        newclass = newclass.replace('-', ' ')
+        improvedclasses.append(newclass)
+    improvedclasses.sort()
     if request.method == 'POST':
-        ANNOTATION_PATH = os.path.join(current_app.root_path, 'Annotation')
         print('Checkpoint 1')
         dog_gen = DogGenerator(ANNOTATION_PATH)
         species = request.form.get('species')
@@ -259,21 +266,35 @@ def dogs():
                 pil_img.save(buff, format="JPEG")
                 new_image_string = base64.b64encode(buff.getvalue()).decode("utf-8")
                 urls.append('data:image/png;base64,%s' % new_image_string)
-            return render_template("dog.html", urls = (urls))
+            return render_template("dog.html", urls = (urls), validspecies = improvedclasses)
         else:
             flash('Invalid species!', category='error')
 
-    return render_template("dog.html", urls = None)
+    return render_template("dog.html", urls = None, validspecies = improvedclasses)
 
 @views.route('/math-symbols', methods=['GET', 'POST'])
 def math_symbols():
+    ANNOTATION_PATH = os.path.join(current_app.root_path, 'AnnotationMath')
+    classes = [dirname[5:] for dirname in os.listdir(ANNOTATION_PATH)]
+    improvedclasses = []
+    for currentclass in classes:
+        if ('cap' in currentclass):
+            currentclass =  "capital " + currentclass.replace('cap', '')
+        newclass = currentclass.lower()
+        if newclass == "decimal":
+            newclass += " (will not produce a decimal)"
+        if newclass == "prime":
+            newclass += " (will not produce prime symbol)"
+        newclass = newclass.lower()
+        newclass = newclass.replace('_', '')
+        improvedclasses.append(newclass)
     if request.method == 'POST':
-        ANNOTATION_PATH = os.path.join(current_app.root_path, 'AnnotationMath')
         math_gen = MathGenerator(ANNOTATION_PATH)
         species = request.form.get('symbol')
+        if ('capital' in species):
+            species =  species.replace('capital', '') + "cap"
         species = species.lower()
         species = species.replace('_', '')
-        species = species.replace('-', '')
         species = species.replace(' ', '')
 
         if species in math_gen.classesbetternames:
@@ -290,11 +311,11 @@ def math_symbols():
                     pil_img.save(buff, format="JPEG")
                     new_image_string = base64.b64encode(buff.getvalue()).decode("utf-8")
                     urls.append('data:image/png;base64,%s' % new_image_string)
-            return render_template("math.html", urls = (urls))
+            return render_template("math.html", urls = (urls), validsymbols = improvedclasses)
         else:
             flash('Invalid symbol!', category='error')
 
-    return render_template("math.html", urls = None)
+    return render_template("math.html", urls = None, validsymbols = improvedclasses)
 
 @views.route('/marvel-charecters', methods=['GET', 'POST'])
 def marvel_charecters():
@@ -325,11 +346,15 @@ def how_to_use():
     mathclassesoriginal = [dirname[5:] for dirname in os.listdir(MATH_ANNOTATION_PATH)]
     mathclasses = []
     for mathclass in mathclassesoriginal:
+        if ('cap' in mathclass):
+            mathclass =  "capital " + mathclass.replace('cap', '')
         newclass = mathclass.lower()
         if newclass == "decimal":
-            newclass += "(broken)"
+            newclass += " (will not produce a decimal)"
         if newclass == "prime":
-            newclass += "(broken)"
+            newclass += " (will not produce prime symbol)"
+        newclass = newclass.lower()
+        newclass = newclass.replace('_', '')
         mathclasses.append(newclass)
 
     DOG_ANNOTATION_PATH = os.path.join(current_app.root_path, 'Annotation')
@@ -340,6 +365,7 @@ def how_to_use():
         newclass = newclass.replace('_', ' ')
         newclass = newclass.replace('-', ' ')
         dogclasses.append(newclass)
+    dogclasses.sort()
     return render_template("howtouse.html", validdogs = dogclasses, validsymbols = mathclasses)
 
 
