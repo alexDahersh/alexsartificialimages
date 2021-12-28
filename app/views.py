@@ -104,6 +104,15 @@ class MathGenerator():
         self.classes = le.inverse_transform(range(len(self.classes)))
         self.num_classes = len(self.classes)
         num_classes = self.num_classes
+        self.classesbetternames = []
+        for mathclass in self.classes:
+            newclass = mathclass.lower()
+            newclass = newclass.replace('_', '')
+            newclass = newclass.replace('-', '')
+            newclass = newclass.replace(' ', '')
+            self.classesbetternames.append(newclass)
+        
+        
 
 
         self.gen = Generator(depth=5, latent_size=256)
@@ -129,7 +138,7 @@ class MathGenerator():
 #             z = self.truncated_normal(size=(n, self.latent_size - self.num_classes))
 #             noise = torch.from_numpy(z).float().cuda()
         races = None
-        index = np.where(self.classes == race)[0][0]
+        index = self.classesbetternames.index(race)
         indexes = []
         for _ in range(n):
             indexes.append(index)
@@ -162,6 +171,13 @@ class DogGenerator():
         self.classes = le.inverse_transform(range(len(self.classes)))
         self.num_classes = len(self.classes)
         num_classes = self.num_classes
+        self.classesbetternames = []
+        for speciesclass in self.classes:
+            newclass = speciesclass.lower()
+            newclass = newclass.replace('_', '')
+            newclass = newclass.replace('-', '')
+            newclass = newclass.replace(' ', '')
+            self.classesbetternames.append(newclass)
 
 
         self.gen = Generator(depth=5, latent_size=256)
@@ -188,7 +204,7 @@ class DogGenerator():
 #             z = self.truncated_normal(size=(n, self.latent_size - self.num_classes))
 #             noise = torch.from_numpy(z).float().cuda()
         races = None
-        index = np.where(self.classes == race)[0][0]
+        index = self.classesbetternames.index(race)
         indexes = []
         print('Checkpoint 4')
         for _ in range(n):
@@ -225,8 +241,12 @@ def dogs():
         print('Checkpoint 1')
         dog_gen = DogGenerator(ANNOTATION_PATH)
         species = request.form.get('species')
+        species = species.lower()
+        species = species.replace('_', '')
+        species = species.replace('-', '')
+        species = species.replace(' ', '')
         print('Checkpoint 2')
-        if species in dog_gen.classes:
+        if species in dog_gen.classesbetternames:
             generated_images = dog_gen.generate(depth=4, alpha=1, noise=None, race=species, n=64, n_plot=10)
             images = generated_images.clone().numpy().transpose(0, 2, 3, 1)      
             urls = []
@@ -251,8 +271,12 @@ def math_symbols():
         ANNOTATION_PATH = os.path.join(current_app.root_path, 'AnnotationMath')
         math_gen = MathGenerator(ANNOTATION_PATH)
         species = request.form.get('symbol')
+        species = species.lower()
+        species = species.replace('_', '')
+        species = species.replace('-', '')
+        species = species.replace(' ', '')
 
-        if species in math_gen.classes:
+        if species in math_gen.classesbetternames:
             urls = []
             scale_size = 1
             for _ in range(2):
@@ -294,6 +318,29 @@ def marvel_charecters():
 
     return render_template("marvel.html", urls = None)
 
+
+@views.route('/how-to-use')
+def how_to_use():
+    MATH_ANNOTATION_PATH = os.path.join(current_app.root_path, 'AnnotationMath')
+    mathclassesoriginal = [dirname[5:] for dirname in os.listdir(MATH_ANNOTATION_PATH)]
+    mathclasses = []
+    for mathclass in mathclassesoriginal:
+        newclass = mathclass.lower()
+        if newclass == "decimal":
+            newclass += "(broken)"
+        if newclass == "prime":
+            newclass += "(broken)"
+        mathclasses.append(newclass)
+
+    DOG_ANNOTATION_PATH = os.path.join(current_app.root_path, 'Annotation')
+    dogclassesoriginal = [dirname[10:] for dirname in os.listdir(DOG_ANNOTATION_PATH)]
+    dogclasses = []
+    for dogclass in dogclassesoriginal:
+        newclass = dogclass.lower()
+        newclass = newclass.replace('_', ' ')
+        newclass = newclass.replace('-', ' ')
+        dogclasses.append(newclass)
+    return render_template("howtouse.html", validdogs = dogclasses, validsymbols = mathclasses)
 
 
 app = Flask(__name__)

@@ -1,0 +1,24 @@
+{% extends "base.html" %} {% block title %}How To Use{% endblock %} {% block
+    content %}
+    <h1>How To Use</h1>
+    <br />
+    <p>To generate and image of either a dog, a math symbol, or a made up marvel superhero you first need to go to the page with you respective image. 
+        If you are trying to generate a dog or a math symbol you must input a valid dog species or math symbol into the input box(valid symbols/species are below and capital letters do not matter).
+        Then to generate an image for any of the pages you need to click the generate button. This should generate images but might take a few seconds to load.</p>
+    <br />
+    <h1>Valid Dog Species</h1>
+    <br />
+    <ul>
+        {% for dogspecies in validdogs %}
+        <li>{{dogspecies}}</li>
+        {% endfor %}
+    </ul>  
+    <br />
+    <h1>Valid Math Symbols</h1>
+    <br />
+    <ul>
+        {% for mathsymbol in validsymbols %}
+        <li>{{mathsymbol}}</li>
+        {% endfor %}
+    </ul> 
+    {% endblock %}
