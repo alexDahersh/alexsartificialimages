@@ -77,7 +77,7 @@ class MarvelGenerator():
         if depth is None:
             depth = self.depth - 1
         if noise is None:
-            noise = th.randn(n, 256 - self.num_classes).cpu()
+            noise = th.randn(n, 256).cpu()
 #             z = self.truncated_normal(size=(n, self.latent_size - self.num_classes))
 #             noise = torch.from_numpy(z).float().cuda()
         
@@ -277,14 +277,14 @@ def marvel_charecters():
         print('Checkpoint 1')
         marvel_gen = MarvelGenerator()
         print('Checkpoint 2')
-        generated_images = marvel_gen.generate(depth=4, alpha=1, noise=None, n=64, n_plot=10)
+        generated_images = marvel_gen.generate(depth=5, alpha=1, noise=None, n=64, n_plot=10)
         images = generated_images.clone().numpy().transpose(0, 2, 3, 1)      
         urls = []
         scale_size = 1
         for marvelimg in images:
             img = (marvelimg*255).astype(np.uint8)
             pil_img = Image.fromarray(img)
-            pil_img = pil_img.resize((64*scale_size,64*scale_size))
+            pil_img = pil_img.resize((128*scale_size,128*scale_size))
             buff = io.BytesIO()
             pil_img.save(buff, format="JPEG")
             new_image_string = base64.b64encode(buff.getvalue()).decode("utf-8")
