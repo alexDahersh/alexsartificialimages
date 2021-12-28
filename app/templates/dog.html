@@ -1,7 +1,7 @@
-{% extends "base.html" %} {% block title %}Generate dogs{% endblock %} {% block
+{% extends "base.html" %} {% block title %}Generate Dogs{% endblock %} {% block
     content %}
     <form method="POST">
-      <h3 align="center">Generate dogs</h3>
+      <h3 align="center">Generate Dogs</h3>
       <div class="form-group">
         <label for="species">Species</label>
         <input
@@ -14,6 +14,7 @@
       </div>
       <br />
       <button type="submit" class="btn btn-primary">Generate</button>
+      <br />
     </form>
     {% if urls%}
     {% for url in urls %}

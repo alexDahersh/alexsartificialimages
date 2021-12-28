@@ -63,6 +63,39 @@ def load_model_weights(model, filename, verbose=1):
     model.load_state_dict(torch.load(filename, map_location=torch.device('cpu')))
     return model
 
+class MarvelGenerator():
+    def __init__(self):
+        self.gen = Generator(depth=6, latent_size=256)
+        GEN_PATH = os.path.join(current_app.root_path, 'marvel_gens', 'genNoGpu.pt')
+        self.gen = load_model_weights(self.gen, GEN_PATH)
+        self.gen_shadow = copy.deepcopy(self.gen)
+        SHADOW_GEN_PATH = os.path.join(current_app.root_path, 'marvel_gens', 'gen_shadowNoGpu.pt')
+        self.gen_shadow = load_model_weights(self.gen_shadow, SHADOW_GEN_PATH)
+
+    def generate(self, depth=None, alpha=1, noise=None, n=1, n_plot=0):
+        print('Checkpoint 3')
+        if depth is None:
+            depth = self.depth - 1
+        if noise is None:
+            noise = th.randn(n, 256 - self.num_classes).cpu()
+#             z = self.truncated_normal(size=(n, self.latent_size - self.num_classes))
+#             noise = torch.from_numpy(z).float().cuda()
+        
+        gan_input = noise
+        print('Checkpoint 6')
+        if True:
+            generated_images = self.gen_shadow(gan_input, depth, alpha).detach().cpu()
+        else:
+            generated_images = self.gen(gan_input, depth, alpha).detach().cpu()
+        print('Checkpoint 7')
+#         self.scale(generated_images)
+        generated_images.add_(1).div_(2)
+        return generated_images
+
+    def toJSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__, 
+            sort_keys=True, indent=4)
+
 class MathGenerator():
     def __init__(self, ANNOTATION_PATH):
         self.classes = [dirname[5:] for dirname in os.listdir(ANNOTATION_PATH)]
@@ -241,17 +274,24 @@ def math_symbols():
 @views.route('/marvel-charecters', methods=['GET', 'POST'])
 def marvel_charecters():
     if request.method == 'POST':
-        note = request.form.get('note')
+        print('Checkpoint 1')
+        marvel_gen = MarvelGenerator()
+        print('Checkpoint 2')
+        generated_images = marvel_gen.generate(depth=4, alpha=1, noise=None, n=64, n_plot=10)
+        images = generated_images.clone().numpy().transpose(0, 2, 3, 1)      
+        urls = []
+        scale_size = 1
+        for marvelimg in images:
+            img = (marvelimg*255).astype(np.uint8)
+            pil_img = Image.fromarray(img)
+            pil_img = pil_img.resize((64*scale_size,64*scale_size))
+            buff = io.BytesIO()
+            pil_img.save(buff, format="JPEG")
+            new_image_string = base64.b64encode(buff.getvalue()).decode("utf-8")
+            urls.append('data:image/png;base64,%s' % new_image_string)
+        return render_template("marvel.html", urls = (urls))
 
-        if len(note) < 1:
-            flash('Note is too short!', category='error')
-        else:
-            new_note = Note(data=note, user_id=current_user.id)
-            db.session.add(new_note)
-            db.session.commit()
-            flash('Note added!', category='success')
-
-    return render_template("home.html", user=current_user)
+    return render_template("marvel.html", urls = None)
 
 
 

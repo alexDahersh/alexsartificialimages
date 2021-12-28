@@ -1,0 +1,14 @@
+{% extends "base.html" %} {% block title %}Generate Marvel Superheroes{% endblock %} {% block
+    content %}
+    <form method="POST">
+      <h3 align="center">Generate Marvel Superheroes</h3>
+      <br />
+      <button type="submit" class="btn btn-primary">Generate</button>
+      <br />
+    </form>
+    {% if urls%}
+    {% for url in urls %}
+        <img src= {{url}}>
+    {% endfor %}
+    {% endif %}
+    {% endblock %}
