@@ -320,21 +320,20 @@ def math_symbols():
 @views.route('/marvel-inspired-superheroes', methods=['GET', 'POST'])
 def marvel_inspired_superheroes():
     if request.method == 'POST':
-        print('Checkpoint 1')
         marvel_gen = MarvelGenerator()
-        print('Checkpoint 2')
-        generated_images = marvel_gen.generate(depth=5, alpha=1, noise=None, n=64, n_plot=10)
-        images = generated_images.clone().numpy().transpose(0, 2, 3, 1)      
         urls = []
         scale_size = 1
-        for marvelimg in images:
-            img = (marvelimg*255).astype(np.uint8)
-            pil_img = Image.fromarray(img)
-            pil_img = pil_img.resize((128*scale_size,128*scale_size))
-            buff = io.BytesIO()
-            pil_img.save(buff, format="JPEG")
-            new_image_string = base64.b64encode(buff.getvalue()).decode("utf-8")
-            urls.append('data:image/png;base64,%s' % new_image_string)
+        for _ in range(4):
+            generated_images = marvel_gen.generate(depth=5, alpha=1, noise=None, n=16, n_plot=10)
+            images = generated_images.clone().numpy().transpose(0, 2, 3, 1)      
+            for marvelimg in images:
+                img = (marvelimg*255).astype(np.uint8)
+                pil_img = Image.fromarray(img)
+                pil_img = pil_img.resize((128*scale_size,128*scale_size))
+                buff = io.BytesIO()
+                pil_img.save(buff, format="JPEG")
+                new_image_string = base64.b64encode(buff.getvalue()).decode("utf-8")
+                urls.append('data:image/png;base64,%s' % new_image_string)
         return render_template("marvel.html", urls = (urls))
 
     return render_template("marvel.html", urls = None)
