@@ -291,9 +291,9 @@ def math_symbols():
     if request.method == 'POST':
         math_gen = MathGenerator(ANNOTATION_PATH)
         species = request.form.get('symbol')
+        species = species.lower()
         if ('capital' in species):
             species =  species.replace('capital', '') + "cap"
-        species = species.lower()
         species = species.replace('_', '')
         species = species.replace(' ', '')
 
