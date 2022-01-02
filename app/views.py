@@ -282,11 +282,29 @@ def math_symbols():
             currentclass =  "capital " + currentclass.replace('cap', '')
         newclass = currentclass.lower()
         if newclass == "decimal":
-            newclass += " (will not produce a decimal)"
+            continue
         if newclass == "prime":
-            newclass += " (will not produce prime symbol)"
+            continue
         newclass = newclass.lower()
-        newclass = newclass.replace('_', '')
+        newclass = newclass.replace('_', ' ')
+        if ('infty' == newclass):
+            newclass =  'infinity'
+        if ('int' == newclass):
+            newclass =  'integral'
+        if ('geq' == newclass):
+            newclass =  '>='
+        if ('leq' == newclass):
+            newclass =  '<='
+        if ('lt' == newclass):
+            newclass =  '<'
+        if ('gt' == newclass):
+            newclass =  '>'
+        if ('div' == newclass):
+            newclass =  'division'
+        if ('neq' == newclass):
+            newclass =  '!='
+        if ('pm' == newclass):
+            newclass =  '+/-'
         improvedclasses.append(newclass)
     if request.method == 'POST':
         math_gen = MathGenerator(ANNOTATION_PATH)
@@ -296,6 +314,32 @@ def math_symbols():
             species =  species.replace('capital', '') + "cap"
         species = species.replace('_', '')
         species = species.replace(' ', '')
+        if ('infinity' == species):
+            species =  'infty'
+        if ('integral' == species):
+            species =  'int'
+        if ('>=' == species):
+            species =  'geq'
+        if ('<=' == species):
+            species =  'leq'
+        if ('<' == species):
+            species =  'lt'
+        if ('>' == species):
+            species =  'gt'
+        if ('%' == species):
+            species =  'div'
+        if ('division' in species):
+            species =  'div'
+        if ('!=' == species):
+            species =  'neq'
+        if ('+-' == species):
+            species =  'pm'
+        if ('+/-' == species):
+            species =  'pm'
+        if ('plusminus' == species):
+            species =  'pm'
+        if ('summation' == species):
+            species =  'sum'
 
         if species in math_gen.classesbetternames:
             urls = []
@@ -349,9 +393,27 @@ def how_to_use():
             mathclass =  "capital " + mathclass.replace('cap', '')
         newclass = mathclass.lower()
         if newclass == "decimal":
-            newclass += " (will not produce a decimal)"
+            continue
         if newclass == "prime":
-            newclass += " (will not produce prime symbol)"
+            continue
+        if ('infty' == newclass):
+            newclass =  'infinity'
+        if ('int' == newclass):
+            newclass =  'integral'
+        if ('geq' == newclass):
+            newclass =  '>='
+        if ('leq' == newclass):
+            newclass =  '<='
+        if ('lt' == newclass):
+            newclass =  '<'
+        if ('gt' == newclass):
+            newclass =  '>'
+        if ('div' == newclass):
+            newclass =  'division'
+        if ('neq' == newclass):
+            newclass =  '!='
+        if ('pm' == newclass):
+            newclass =  '+/-'
         newclass = newclass.lower()
         newclass = newclass.replace('_', '')
         mathclasses.append(newclass)
